@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#101413" />
+    <title>SILO — Multi-agent software workspace</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="shell">
+      <aside class="sidebar">
+        <a class="brand" href="#" aria-label="SILO home"><span class="brand-mark">S</span><span>SILO</span></a>
+        <nav aria-label="Main navigation">
+          <a class="nav-link active" href="#"><span>⌘</span> Workspace</a>
+          <a class="nav-link" href="#agents"><span>◎</span> Agents</a>
+          <a class="nav-link" href="#activity"><span>↗</span> Activity</a>
+        </nav>
+        <div class="project-switcher">
+          <p>PROJECT</p>
+          <button><span class="project-icon">N</span><span><strong>NOVA ONE</strong><small>Robotics platform</small></span><b>⌄</b></button>
+        </div>
+        <div class="team">
+          <p>TEAM</p>
+          <div class="person"><span class="avatar plum">AM</span><span><strong>Alex Morgan</strong><small>Founder</small></span><i></i></div>
+          <div class="person"><span class="avatar photo">JL</span><span><strong>Jamie Lin</strong><small>Engineer</small></span><i></i></div>
+          <button class="invite">＋ Invite teammate</button>
+        </div>
+        <button class="settings">⚙ <span>Project settings</span></button>
+      </aside>
+
+      <main>
+        <header>
+          <div>
+            <div class="eyebrow"><span class="live-dot"></span> BUILD SESSION 04</div>
+            <h1>Good morning, Alex.</h1>
+            <p>Your agent team is ready. What are we building today?</p>
+          </div>
+          <div class="header-actions"><div class="avatars"><span>AM</span><span>JL</span><button>＋</button></div><button class="run"><span>▶</span> Run build</button></div>
+        </header>
+
+        <section class="mission">
+          <div class="mission-top"><span class="spark">✣</span><label for="mission">DESCRIBE YOUR MISSION</label><select id="owner-role" aria-label="Your specialist role"><option value="infrastructure">Infrastructure</option><option value="database">Database</option><option value="auth">Auth & security</option><option value="frontend">Frontend</option><option value="intelligence">AI & intelligence</option><option value="billing">Billing</option></select><span class="secure">◈ Architecture-aware</span></div>
+          <textarea id="mission" rows="3" placeholder="Tell the team what you want to build…">Build the navigation and perception system for an autonomous warehouse robot that can safely operate around people.</textarea>
+          <div class="mission-foot"><button id="attach">⌕ Attach specs</button><span id="count">125 / 2,000</span><button id="architect" class="architect">Architect project <span>→</span></button></div>
+        </section>
+
+        <section class="section-head">
+          <div><span class="kicker">LIVE ARCHITECTURE</span><h2>Your specialist team</h2></div>
+          <div class="view-toggle"><button class="selected">Canvas</button><button>List</button></div>
+        </section>
+
+        <section class="architecture" id="agents">
+          <svg class="connections" viewBox="0 0 1000 460" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M285 130 C390 130 405 80 500 80 C595 80 610 130 715 130" />
+            <path d="M285 130 C410 130 375 355 500 355 C625 355 590 130 715 130" />
+            <path d="M500 145 L500 290" />
+          </svg>
+          <article class="agent database" data-agent="database">
+            <div class="card-top"><span class="agent-icon">◫</span><span class="status">● ACTIVE</span><button>•••</button></div>
+            <div><span class="role">DATA LAYER</span><h3>Atlas</h3><p>Database Architect</p></div>
+            <div class="stack"><span>PostgreSQL</span><span>TimescaleDB</span><span>＋2</span></div>
+            <div class="working"><span class="pulse"></span><p><b>Designing telemetry schema</b><small>12 tables · 4 policies</small></p></div>
+          </article>
+          <article class="agent intelligence" data-agent="intelligence">
+            <div class="card-top"><span class="agent-icon">✣</span><span class="status">● RESEARCHING</span><button>•••</button></div>
+            <div><span class="role">ROBOT INTELLIGENCE</span><h3>Vector</h3><p>Robotics Systems Lead</p></div>
+            <div class="stack"><span>ROS 2</span><span>Nav2</span><span>＋4</span></div>
+            <div class="working"><span class="pulse"></span><p><b>Evaluating SLAM libraries</b><small>Comparing 8 options</small></p></div>
+          </article>
+          <article class="agent security" data-agent="security">
+            <div class="card-top"><span class="agent-icon">◇</span><span class="status">● ACTIVE</span><button>•••</button></div>
+            <div><span class="role">TRUST LAYER</span><h3>Sentinel</h3><p>Security & Auth</p></div>
+            <div class="stack"><span>Auth0</span><span>mTLS</span><span>＋3</span></div>
+            <div class="working"><span class="pulse"></span><p><b>Mapping device identities</b><small>Zero-trust policy</small></p></div>
+          </article>
+          <article class="agent empty" id="add-agent">
+            <button><span>＋</span><b>Add specialist</b><small>Deploy a domain expert</small></button>
+          </article>
+          <article class="agent deployment" data-agent="deployment">
+            <div class="card-top"><span class="agent-icon">△</span><span class="status waiting">○ QUEUED</span><button>•••</button></div>
+            <div><span class="role">EDGE & CLOUD</span><h3>Orbit</h3><p>Infrastructure Engineer</p></div>
+            <div class="stack"><span>Docker</span><span>K3s</span><span>＋2</span></div>
+            <div class="working queued"><span></span><p><b>Waiting on architecture</b><small>3 dependencies</small></p></div>
+          </article>
+        </section>
+
+        <section class="bottom-grid">
+          <article class="recommendation">
+            <div class="rec-head"><span class="rec-icon">✣</span><div><span class="kicker">AGENT INTELLIGENCE</span><h2>Research brief</h2></div><span class="fresh">Updated now</span></div>
+            <p id="analysis-copy">Vector will analyze suitable technologies against your delivery, safety, and deployment constraints.</p>
+            <div class="winner"><div><span>RECOMMENDED FOUNDATION</span><h3 id="recommended-stack">ROS 2 + Nav2 + OpenCV</h3><p id="recommendation-reason">Best fit for deterministic navigation and long-term support.</p></div><strong id="fit-score">94<small>/100 fit</small></strong></div>
+            <button id="brief">Open full decision brief <span>↗</span></button>
+          </article>
+          <article class="activity" id="activity">
+            <div class="activity-head"><div><span class="kicker">LIVE</span><h2>Team activity</h2></div><button>View all</button></div>
+            <div class="event"><span class="avatar violet">V</span><p><b>Vector</b> recommended Nav2 over MRPT<small>Just now</small></p></div>
+            <div class="event"><span class="avatar green">A</span><p><b>Atlas</b> created the sensor_events schema<small>2 min ago</small></p></div>
+            <div class="event"><span class="avatar tan">S</span><p><b>Sentinel</b> flagged a boundary dependency<small>5 min ago</small></p></div>
+          </article>
+        </section>
+        <section class="control-deck" id="control-deck">
+          <div class="section-head"><div><span class="kicker">BUILD CONTROL</span><h2>Ship with your specialist</h2></div><span id="session-state">Create an architecture to unlock</span></div>
+          <div class="control-grid">
+            <form id="task-form"><label>DELEGATE A SCOPED TASK</label><textarea id="task-prompt" rows="3" placeholder="Describe the code your specialist should create…"></textarea><button class="run">Generate proposal →</button></form>
+            <form id="research-form"><label>LIVE DEPENDENCY RESEARCH</label><div><select id="ecosystem"><option>npm</option><option>pypi</option><option>crates</option></select><input id="research-query" placeholder="Search libraries" /></div><button>Research registry ↗</button></form>
+            <form id="run-form"><label>ISOLATED TEST RUN</label><select id="runtime"><option>node</option><option>python</option><option>rust</option><option>go</option></select><button>Queue sandbox tests ▶</button></form>
+            <form id="publish-form"><label>PUBLISH TO GITHUB</label><div><input id="github-owner" placeholder="Owner" /><input id="github-repo" placeholder="Repository" /></div><input id="github-token" type="password" placeholder="Fine-grained GitHub token" autocomplete="off" /><button>Publish project ↗</button></form>
+          </div>
+          <pre id="operation-output">SILO activity and results will appear here.</pre>
+        </section>
+      </main>
+    </div>
+
+    <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" hidden>
+      <div class="modal-card"><button class="close" aria-label="Close">×</button><span class="spark large">✣</span><span class="kicker">ARCHITECTURE READY</span><h2 id="modal-title">Your specialist team is aligned.</h2><p id="modal-copy">SILO is creating the sealed domains and selecting the right foundation.</p><div class="modal-stats"><span><b>6</b> domains</span><span><b id="line-estimate">—</b> lines estimated</span><span><b id="modal-fit">—</b> stack fit</span></div><button class="run modal-run">Start coordinated build →</button></div>
+    </div>
+    <script src="app.js"></script>
+  </body>
+</html>

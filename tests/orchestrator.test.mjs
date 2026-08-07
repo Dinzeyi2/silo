@@ -1,0 +1,8 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import { createOrchestrator, buildPlan } from "../src/orchestrator.mjs";
+
+const roots={database:"db/schema.sql",auth:"auth/session.ts",intelligence:"intelligence/core.py",billing:"billing/plans.json",frontend:"ui/app.tsx",infrastructure:"infra/app.yaml"};
+test("describe-to-build delegates the whole product across every sealed specialist",async()=>{const calls=[];const agent={generate:async input=>{calls.push(input);return {changes:[{path:roots[input.domain],content:`owned by ${input.domain}`}],contracts:[]};}};const sandbox={run:async()=>({passed:true})};const orchestrator=createOrchestrator({agent,sandbox});const analysis={language:"TypeScript",libraries:["React","PostgreSQL"]};const result=await orchestrator.build({mission:"Build a collaborative booking platform",analysis});assert.equal(result.status,"ready");assert.deepEqual(result.steps.map(step=>step.domain),["database","auth","intelligence","billing","frontend","infrastructure"]);assert.equal(result.files.length,6);assert.equal(calls.length,6);});
+
+test("project plan keeps each responsibility explicit",()=>{const plan=buildPlan("Build a startup",{language:"TypeScript",libraries:["Node.js"]});assert.match(plan.find(item=>item.domain==="auth").prompt,/without editing database files/);assert.match(plan.find(item=>item.domain==="infrastructure").prompt,/Wire the sealed domains together/);});
