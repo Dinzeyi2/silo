@@ -19,7 +19,7 @@ export const DOMAINS = Object.freeze({
   },
   infrastructure: {
     label: "Infrastructure Engineer",
-    roots: ["infra/", "deploy/", ".github/"],
+    roots: ["infra/", "deploy/", ".github/", "package.json", "package-lock.json", "pyproject.toml", "requirements.txt", "Cargo.toml", "Cargo.lock", "go.mod", "go.sum", "Dockerfile", "README.md"],
     forbidden: ["db/", "auth/", "ui/", "billing/"],
     system: "Work only on deployment, observability, CI, containers, networking, reliability, and cloud resources.",
   },

@@ -13,14 +13,15 @@ export function buildPlan(mission, analysis) {
 
 export function createOrchestrator({agent,sandbox,maxRepairRounds=2}) {
   return {
-    async build({mission,analysis,files=[],runTests=false,runtime="node"}) {
-      const steps=[],workspace=new Map(files.map(file=>[file.path,file.content]));
+    async build({mission,analysis,files=[],runTests=false,runtime="node",memory="",memoryByDomain={}}) {
+      const steps=[],interfaces=[],workspace=new Map(files.map(file=>[file.path,file.content]));
       for(const item of buildPlan(mission,analysis)){
         const existing=Array.from(workspace,([path,content])=>({path,content}));
-        const generated=await agent.generate({domain:item.domain,prompt:item.prompt,analysis,files:existing});
+        const generated=await agent.generate({domain:item.domain,prompt:item.prompt,analysis,files:existing,memory:memoryByDomain[item.domain]||memory,interfaces:[...interfaces]});
         assertBoundary(item.domain,generated.changes);
         for(const change of generated.changes)workspace.set(change.path,change.content);
         steps.push({domain:item.domain,prompt:item.prompt,changes:generated.changes,contracts:generated.contracts||[],summary:generated.summary||null,model:generated.model||null});
+        interfaces.push(...(generated.contracts||[]).map(contract=>({...contract,domain:item.domain})));
       }
       let testResult=null,repairRounds=0;
       if(runTests){
@@ -28,7 +29,7 @@ export function createOrchestrator({agent,sandbox,maxRepairRounds=2}) {
         while(!testResult.passed&&repairRounds<maxRepairRounds){
           repairRounds++;
           for(const step of steps){
-            const repair=await agent.generate({domain:step.domain,prompt:`Repair your domain after the integrated test failure. Preserve public contracts. Test command: ${testResult.command}. Output:\n${testResult.stderr||testResult.stdout}`,analysis,files:Array.from(workspace,([path,content])=>({path,content}))});
+            const repair=await agent.generate({domain:step.domain,prompt:`Repair your domain after the integrated test failure. Preserve public contracts. Test command: ${testResult.command}. Output:\n${testResult.stderr||testResult.stdout}`,analysis,files:Array.from(workspace,([path,content])=>({path,content})),memory:memoryByDomain[step.domain]||memory,interfaces:[...interfaces]});
             assertBoundary(step.domain,repair.changes);for(const change of repair.changes)workspace.set(change.path,change.content);step.changes.push(...repair.changes);
           }
           testResult=await sandbox.run({runtime,files:Array.from(workspace,([path,content])=>({path,content}))});

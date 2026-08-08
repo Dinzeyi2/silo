@@ -30,6 +30,7 @@ document.querySelector("#architect").addEventListener("click", async () => {
     document.querySelector("#modal-copy").textContent = `${analysis.projectType}: ${analysis.codingStyle}. Each specialist is locked to its own file boundaries.`;
     connectRealtime(data.project.id, data.credentials.token);
     const queued=await projectRequest("/builds",{method:"POST",body:JSON.stringify({mission:mission.value,runTests:false})});
+    session.lastBuildId=queued.build.id;
     document.querySelector("#modal-copy").textContent += ` Whole-project build ${queued.build.id.slice(0,8)} is running across all six specialists.`;
     const completed=await waitForBuild(queued.build.id);
     document.querySelector("#modal-copy").textContent += ` Final status: ${completed.status}.`;
@@ -42,7 +43,7 @@ document.querySelector("#architect").addEventListener("click", async () => {
 async function waitForBuild(buildId) {
   for (let attempt=0;attempt<180;attempt++) {
     const {build}=await projectRequest(`/builds/${buildId}`);
-    if (["ready","needs_review","failed"].includes(build.status)) return build;
+    if (["ready","needs_review","failed","cancelled"].includes(build.status)) return build;
     await new Promise(resolve=>setTimeout(resolve,2000));
   }
   throw new Error("The build is still running. You can safely return to it from project activity.");
@@ -66,7 +67,7 @@ function connectRealtime(projectId, token) {
 const output=document.querySelector("#operation-output");
 async function projectRequest(path,options={}){if(!session)throw new Error("Create the project architecture first");const response=await fetch(`/api/projects/${session.projectId}${path}`,{...options,headers:{"content-type":"application/json",authorization:`Bearer ${session.token}`,...options.headers}});const data=await response.json();if(!response.ok)throw new Error(data.error);return data;}
 function bindForm(id,action){document.querySelector(id).addEventListener("submit",async event=>{event.preventDefault();output.textContent="Working…";try{output.textContent=JSON.stringify(await action(),null,2);}catch(error){output.textContent=`Error: ${error.message}`;}});}
-bindForm("#task-form",()=>projectRequest("/tasks",{method:"POST",body:JSON.stringify({prompt:document.querySelector("#task-prompt").value,async:true})}));
+bindForm("#task-form",async()=>{if(!session.conversationId){const {conversation}=await projectRequest("/conversations",{method:"POST",body:JSON.stringify({domain:session.role,title:`${session.role} specialist workspace`})});session.conversationId=conversation.id;}return projectRequest(`/conversations/${session.conversationId}/message`,{method:"POST",body:JSON.stringify({content:document.querySelector("#task-prompt").value})});});
 bindForm("#research-form",()=>projectRequest(`/files?ecosystem=${encodeURIComponent(document.querySelector("#ecosystem").value)}&research=${encodeURIComponent(document.querySelector("#research-query").value)}`));
 bindForm("#run-form",()=>projectRequest("/runs",{method:"POST",body:JSON.stringify({runtime:document.querySelector("#runtime").value})}));
 bindForm("#publish-form",()=>projectRequest("/publish",{method:"POST",body:JSON.stringify({owner:document.querySelector("#github-owner").value,repo:document.querySelector("#github-repo").value,githubToken:document.querySelector("#github-token").value,branch:"main"})}));
